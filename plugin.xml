@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+      id="com.tomasv.cordova.plugin.wp8-orientation-support"
+      version="1.0.0">
+    <name>WP8OrientationSupport</name>
+    <description>Windows Phone 8 device orientation support plugin.</description>
+    <license>MIT</license>
+    <keywords>orientation</keywords>
+    <repo>https://github.com/tomas-v/wp8-orientation-support</repo>
+    <issue>https://github.com/tomas-v/wp8-orientation-support/issues</issue>
+
+    <js-module src="www/orientation.js" name="orientation">
+        <clobbers target="OrientationSupport" />
+    </js-module>
+
+    <!-- wp8 -->
+    <platform name="wp8">
+        <config-file target="config.xml" parent="/*">
+            <feature name="OrientationSupport">
+                <param name="wp-package" value="OrientationSupport"/>
+            </feature>
+        </config-file>
+        <source-file src="src/OrientationSupport.cs" />
+    </platform>
+    
+</plugin>
