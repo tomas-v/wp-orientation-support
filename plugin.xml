@@ -19,9 +19,22 @@
         <config-file target="config.xml" parent="/*">
             <feature name="OrientationSupport">
                 <param name="wp-package" value="OrientationSupport"/>
+                <param name="onload" value="true"/>
             </feature>
         </config-file>
-        <source-file src="src/OrientationSupport.cs" />
+        <source-file src="src/wp8/OrientationSupport.cs" />
     </platform>
+
+    <!-- wp7 -->
+    <platform name="wp7">
+        <config-file target="config.xml" parent="/*">
+            <feature name="OrientationSupport">
+                <param name="wp-package" value="OrientationSupport"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
+        <source-file src="src/wp7/OrientationSupport.cs" />
+    </platform>
+
     
 </plugin>

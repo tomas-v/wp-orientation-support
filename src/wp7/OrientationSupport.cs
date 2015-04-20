@@ -33,6 +33,11 @@ namespace Cordova.Extension.Commands
             System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>inited from plugin...prefOrientation: " + this.prefOrientation);
         }
 
+        public override void OnInit()
+        {
+            System.Diagnostics.Debug.WriteLine(">>>>>>>>..... OrientationSupport --> On Init()");
+        }
+
 
         private void LoadConfigPrefs()
         {
