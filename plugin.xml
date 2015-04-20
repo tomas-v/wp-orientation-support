@@ -7,8 +7,8 @@
     <description>Windows Phone device orientation support plugin.</description>
     <license>MIT</license>
     <keywords>orientation</keywords>
-    <repo>https://github.com/tomas-v/wp8-orientation-support</repo>
-    <issue>https://github.com/tomas-v/wp8-orientation-support/issues</issue>
+    <repo>https://github.com/tomas-v/wp-orientation-support</repo>
+    <issue>https://github.com/tomas-v/wp-orientation-support/issues</issue>
 
     <js-module src="www/orientation.js" name="orientation">
         <clobbers target="OrientationSupport" />
