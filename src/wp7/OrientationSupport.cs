@@ -24,21 +24,36 @@ namespace Cordova.Extension.Commands
     /// </summary>
     public class OrientationSupport : BaseCommand
     {
-        private string prefOrientations = "";
+        private const string PORTRAIT_OR_LANDSCAPE = "default";
+        private const string PORTRAIT = "portrait";
+        private const string LANDSCAPE = "landscape";
+
+
+        private string prefOrientations = "none";
 
 
         public OrientationSupport()
         {
-           loadConfigPrefs();
+            PhoneApplicationPage currentPage = ((PhoneApplicationFrame)Application.Current.RootVisual).Content as PhoneApplicationPage;
+
+            if (currentPage != null) {
+                currentPage.SupportedOrientations = SupportedPageOrientation.Landscape;
+            }
+
+
+           //loadConfigPrefs();
+            //Windows.Graphics.Display.DisplayProperties.  //DisplayProperties.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.LandscapeFlipped; 
+            //Microsoft.Phone.Controls.SupportedPageOrientations = SupportedPageOrientation.Portrait;
         }
 
         /// <summary>
         /// Apply orientation when plugin is auto-loaded.
         /// </summary>
-        public override void OnInit()
+        /*public override void OnInit()
         {
             applyOrientationSettings(this.prefOrientations);
-        }
+        
+        }*/
 
         /// <summary>
         /// Reads "orientation" value from the config.xml file.
@@ -66,31 +81,39 @@ namespace Cordova.Extension.Commands
         /// </summary>
         public void applyOrientationSettings(string settings)
         {
-            if (String.IsNullOrEmpty(settings))
+            try
             {
-                DisplayOrientations supportedOrientations = DisplayOrientations.None;
-
-                switch (settings.ToLower())
+                PhoneApplicationPage currentPage = ((PhoneApplicationFrame)Application.Current.RootVisual).Content as PhoneApplicationPage;
+                if (currentPage != null)
                 {
-                    case "portrait":
-                        supportedOrientations = DisplayOrientations.Portrait;
-                        break;
-                    case "landscape":
-                        supportedOrientations = DisplayOrientations.Landscape;
-                        break;
-                    case "default":
-                        supportedOrientations = DisplayOrientations.Portrait | DisplayOrientations.Landscape;
-                        break;
-                    default:
-                        supportedOrientations = DisplayOrientations.None;
-                        System.Diagnostics.Debug.WriteLine("Error: \"orientation\" value in config.xml is not supported!");
-                        break;
-                }
+                    SupportedPageOrientation supportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
 
-                DisplayProperties.AutoRotationPreferences = supportedOrientations;
+                    switch (settings.ToLower())
+                    {
+                        case PORTRAIT:
+                            supportedOrientations = SupportedPageOrientation.Portrait;
+                            break;
+                        case LANDSCAPE:
+                            supportedOrientations = SupportedPageOrientation.Landscape;
+                            break;
+                        case PORTRAIT_OR_LANDSCAPE:
+                            supportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
+                            break;
+                        default:
+                            System.Diagnostics.Debug.WriteLine("Error: \"orientation\" value in config.xml is not supported!");
+                            break;
+                    }
+
+                    currentPage.SupportedOrientations = supportedOrientations;
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Current applicationPage not found. Error: " + e.Message);
+                return;
             }
 
-            DispatchCommandResult();
+            //DispatchCommandResult();
         }
     }
 }
