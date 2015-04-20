@@ -20,80 +20,77 @@ using Windows.Graphics.Display;
 namespace Cordova.Extension.Commands
 {
     /// <summary>
+    /// This plugin fixes missing support of the device orientation settings.
     /// </summary>
     public class OrientationSupport : BaseCommand
     {
-        private string prefOrientation = "";
+        private string prefOrientations = "";
 
 
         public OrientationSupport()
         {
-            LoadConfigPrefs();
-
-            System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>inited from plugin...prefOrientation: " + this.prefOrientation);
+           loadConfigPrefs();
         }
 
+        /// <summary>
+        /// Apply orientation when plugin is auto-loaded.
+        /// </summary>
         public override void OnInit()
         {
-            System.Diagnostics.Debug.WriteLine(">>>>>>>>..... OrientationSupport --> On Init()");
+            applyOrientationSettings(this.prefOrientations);
         }
 
-
-        private void LoadConfigPrefs()
+        /// <summary>
+        /// Reads "orientation" value from the config.xml file.
+        /// </summary>
+        private void loadConfigPrefs()
         {
             StreamResourceInfo streamInfo = Application.GetResourceStream(new Uri("config.xml", UriKind.Relative));
             if (streamInfo != null)
             {
                 using (StreamReader sr = new StreamReader(streamInfo.Stream))
                 {
-                    //This will Read Keys Collection for the xml file
+                    // Read Keys Collection from the xml file.
                     XDocument configFile = XDocument.Parse(sr.ReadToEnd());
 
-                    this.prefOrientation = configFile.Descendants()
+                    this.prefOrientations = configFile.Descendants()
                                       .Where(x => (string)x.Attribute("name") == "orientation")
                                       .Select(x => (string)x.Attribute("value"))
                                       .FirstOrDefault();
-                    /* int nVal;
-                     prefDelay = int.TryParse(configDelay, out nVal) ? nVal : prefDelay;*/
                 }
             }
         }
 
         /// <summary>
+        /// Applies supported device orientations as set in the config.xml.
         /// </summary>
-        public void applyOrientationSettings(string options)
+        public void applyOrientationSettings(string settings)
         {
-            System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>options for plugin: " + options);
-
-            var resolution = (Size)DeviceExtendedProperties.GetValue("PhysicalScreenResolution");
-            var width = resolution.Width.ToString();
-            var height = resolution.Height.ToString();
-            var result = "{\"width\":\"" + width + "\",\"height\":\"" + height + "\"}";
-
-            System.Diagnostics.Debug.WriteLine(">>>>>>>>>>result from plugin: " + result);
-            //DispatchCommandResult(new PluginResult(PluginResult.Status.OK, result));
-
-
-            DisplayOrientations supportedOrientations = DisplayOrientations.None;
-
-            switch (this.prefOrientation.ToLower())
+            if (String.IsNullOrEmpty(settings))
             {
-                case "portrait":
-                    supportedOrientations = DisplayOrientations.Portrait;
-                    break;
-                case "landscape":
-                    supportedOrientations = DisplayOrientations.Landscape;
-                    break;
-                case "default":
-                    supportedOrientations = DisplayOrientations.Portrait | DisplayOrientations.Landscape;
-                    break;
-                default:
-                    supportedOrientations = DisplayOrientations.None;
-                    System.Diagnostics.Debug.WriteLine("Display orientation value in config.xml is not supported!");
-                    break;
+                DisplayOrientations supportedOrientations = DisplayOrientations.None;
+
+                switch (settings.ToLower())
+                {
+                    case "portrait":
+                        supportedOrientations = DisplayOrientations.Portrait;
+                        break;
+                    case "landscape":
+                        supportedOrientations = DisplayOrientations.Landscape;
+                        break;
+                    case "default":
+                        supportedOrientations = DisplayOrientations.Portrait | DisplayOrientations.Landscape;
+                        break;
+                    default:
+                        supportedOrientations = DisplayOrientations.None;
+                        System.Diagnostics.Debug.WriteLine("Error: \"orientation\" value in config.xml is not supported!");
+                        break;
+                }
+
+                DisplayProperties.AutoRotationPreferences = supportedOrientations;
             }
 
-            DisplayProperties.AutoRotationPreferences = supportedOrientations;
+            DispatchCommandResult();
         }
     }
 }

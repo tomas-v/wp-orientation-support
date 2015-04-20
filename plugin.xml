@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-      id="com.cordova.plugin.wp8-orientation-support"
+      id="com.cordova.plugin.wp-orientation-support"
       version="1.0.0">
     <name>WP8OrientationSupport</name>
-    <description>Windows Phone 8 device orientation support plugin.</description>
+    <description>Windows Phone device orientation support plugin.</description>
     <license>MIT</license>
     <keywords>orientation</keywords>
     <repo>https://github.com/tomas-v/wp8-orientation-support</repo>
