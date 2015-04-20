@@ -31,19 +31,14 @@ namespace Cordova.Extension.Commands
 
         private string prefOrientations = "none";
 
-
+        /// <summary>
+        /// Loads configuration and sets supported orientations.
+        /// </summary>
         public OrientationSupport()
         {
-            PhoneApplicationPage currentPage = ((PhoneApplicationFrame)Application.Current.RootVisual).Content as PhoneApplicationPage;
+            loadConfigPrefs();
 
-            if (currentPage != null) {
-                currentPage.SupportedOrientations = SupportedPageOrientation.Landscape;
-            }
-
-
-           //loadConfigPrefs();
-            //Windows.Graphics.Display.DisplayProperties.  //DisplayProperties.AutoRotationPreferences = Windows.Graphics.Display.DisplayOrientations.LandscapeFlipped; 
-            //Microsoft.Phone.Controls.SupportedPageOrientations = SupportedPageOrientation.Portrait;
+            applyOrientationSettings(this.prefOrientations);
         }
 
         /// <summary>
@@ -112,8 +107,6 @@ namespace Cordova.Extension.Commands
                 System.Diagnostics.Debug.WriteLine("Current applicationPage not found. Error: " + e.Message);
                 return;
             }
-
-            //DispatchCommandResult();
         }
     }
 }
