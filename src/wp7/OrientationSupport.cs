@@ -29,7 +29,7 @@ namespace Cordova.Extension.Commands
         private const string LANDSCAPE = "landscape";
 
 
-        private string prefOrientations = "none";
+        private string prefOrientations = null;
 
         /// <summary>
         /// Loads configuration and sets supported orientations.
@@ -76,30 +76,32 @@ namespace Cordova.Extension.Commands
         /// </summary>
         public void applyOrientationSettings(string settings)
         {
+            if (string.IsNullOrEmpty(settings))
+            {
+                System.Diagnostics.Debug.WriteLine("Supported orientation value missing. Will use default value from MainPage.xaml.");
+                return;
+            }
+
             try
             {
                 PhoneApplicationPage currentPage = ((PhoneApplicationFrame)Application.Current.RootVisual).Content as PhoneApplicationPage;
                 if (currentPage != null)
                 {
-                    SupportedPageOrientation supportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
-
                     switch (settings.ToLower())
                     {
                         case PORTRAIT:
-                            supportedOrientations = SupportedPageOrientation.Portrait;
+                            currentPage.SupportedOrientations = SupportedPageOrientation.Portrait;
                             break;
                         case LANDSCAPE:
-                            supportedOrientations = SupportedPageOrientation.Landscape;
+                            currentPage.SupportedOrientations = SupportedPageOrientation.Landscape;
                             break;
                         case PORTRAIT_OR_LANDSCAPE:
-                            supportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
+                            currentPage.SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
                             break;
                         default:
                             System.Diagnostics.Debug.WriteLine("Error: \"orientation\" value in config.xml is not supported!");
                             break;
                     }
-
-                    currentPage.SupportedOrientations = supportedOrientations;
                 }
             }
             catch (Exception e)
