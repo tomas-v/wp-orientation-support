@@ -14,21 +14,23 @@ using WPCordovaClassLib.Cordova.JSON;
 using System.Windows.Resources;
 using System.IO;
 using System.Xml.Linq;
+using Windows.Graphics.Display;
+
 
 namespace Cordova.Extension.Commands
 {
     /// <summary>
     /// </summary>
-    public class OrientationSupport: BaseCommand
+    public class OrientationSupport : BaseCommand
     {
-        private int prefDelay = 12345; 
+        private string prefOrientation = "";
 
 
         public OrientationSupport()
         {
             LoadConfigPrefs();
 
-            System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>inited from plugin...value: "+ this.prefDelay);
+            System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>inited from plugin...prefOrientation: " + this.prefOrientation);
         }
 
 
@@ -41,13 +43,13 @@ namespace Cordova.Extension.Commands
                 {
                     //This will Read Keys Collection for the xml file
                     XDocument configFile = XDocument.Parse(sr.ReadToEnd());
-                    
-                    string configDelay = configFile.Descendants()
-                                      .Where(x => (string)x.Attribute("name") == "SplashScreenDelay")
+
+                    this.prefOrientation = configFile.Descendants()
+                                      .Where(x => (string)x.Attribute("name") == "orientation")
                                       .Select(x => (string)x.Attribute("value"))
                                       .FirstOrDefault();
-                    int nVal;
-                    prefDelay = int.TryParse(configDelay, out nVal) ? nVal : prefDelay;
+                    /* int nVal;
+                     prefDelay = int.TryParse(configDelay, out nVal) ? nVal : prefDelay;*/
                 }
             }
         }
@@ -65,6 +67,28 @@ namespace Cordova.Extension.Commands
 
             System.Diagnostics.Debug.WriteLine(">>>>>>>>>>result from plugin: " + result);
             //DispatchCommandResult(new PluginResult(PluginResult.Status.OK, result));
+
+
+            DisplayOrientations supportedOrientations = DisplayOrientations.None;
+
+            switch (this.prefOrientation.ToLower())
+            {
+                case "portrait":
+                    supportedOrientations = DisplayOrientations.Portrait;
+                    break;
+                case "landscape":
+                    supportedOrientations = DisplayOrientations.Landscape;
+                    break;
+                case "default":
+                    supportedOrientations = DisplayOrientations.Portrait | DisplayOrientations.Landscape;
+                    break;
+                default:
+                    supportedOrientations = DisplayOrientations.None;
+                    System.Diagnostics.Debug.WriteLine("Display orientation value in config.xml is not supported!");
+                    break;
+            }
+
+            DisplayProperties.AutoRotationPreferences = supportedOrientations;
         }
     }
 }
