@@ -28,7 +28,6 @@ namespace Cordova.Extension.Commands
         private const string PORTRAIT = "portrait";
         private const string LANDSCAPE = "landscape";
 
-
         private string prefOrientations = null;
 
         /// <summary>
@@ -44,7 +43,9 @@ namespace Cordova.Extension.Commands
         /// <summary>
         /// Apply orientation when plugin is auto-loaded.
         /// </summary>
-        /*public override void OnInit()
+        /// 
+        /*
+        public override void OnInit()
         {
             applyOrientationSettings(this.prefOrientations);
         
@@ -74,9 +75,9 @@ namespace Cordova.Extension.Commands
         /// <summary>
         /// Applies supported device orientations as set in the config.xml.
         /// </summary>
-        public void applyOrientationSettings(string settings)
+        public void applyOrientationSettings(string args)
         {
-            if (string.IsNullOrEmpty(settings))
+            if (string.IsNullOrEmpty(args))
             {
                 System.Diagnostics.Debug.WriteLine("Supported orientation value missing. Will use default value from MainPage.xaml.");
                 return;
@@ -87,21 +88,26 @@ namespace Cordova.Extension.Commands
                 PhoneApplicationPage currentPage = ((PhoneApplicationFrame)Application.Current.RootVisual).Content as PhoneApplicationPage;
                 if (currentPage != null)
                 {
-                    switch (settings.ToLower())
+                    switch (args.ToLower())
                     {
                         case PORTRAIT:
                             currentPage.SupportedOrientations = SupportedPageOrientation.Portrait;
+                            currentPage.Orientation = PageOrientation.Portrait;
                             break;
                         case LANDSCAPE:
                             currentPage.SupportedOrientations = SupportedPageOrientation.Landscape;
+                            currentPage.Orientation = PageOrientation.Landscape;
                             break;
                         case PORTRAIT_OR_LANDSCAPE:
                             currentPage.SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
+                            currentPage.Orientation = PageOrientation.None;
                             break;
                         default:
                             System.Diagnostics.Debug.WriteLine("Error: \"orientation\" value in config.xml is not supported!");
                             break;
                     }
+
+                    System.Diagnostics.Debug.WriteLine("Phonegap plugin[wp-orientation-support]: Device supported orientations set from config.xml (value:" + args + ")");
                 }
             }
             catch (Exception e)
