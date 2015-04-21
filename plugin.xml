@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
       id="com.cordova.plugin.wp-orientation-support"
       version="1.0.0">
-    <name>WP8OrientationSupport</name>
+    <name>WP-OrientationSupport</name>
     <description>Windows Phone device orientation support plugin.</description>
     <license>MIT</license>
     <keywords>orientation</keywords>
