@@ -1,2 +1,2 @@
-# wp8-orientation
-Windows Phone device orientations support added. Implementation in Phonegap 4.2 is missing.
+# wp-orientation
+Windows Phone supported device orientations added as the implementation in Phonegap 4.2 is missing.
